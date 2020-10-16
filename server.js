@@ -1,6 +1,11 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const express = require('express');
 const bcrypt = require('bcrypt'); // for encryption purpose
 const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
 
 const app = express();
 
@@ -15,6 +20,14 @@ app.set('view-engine', 'ejs');
 
 // allow the form values to be accessed in the req variable in post
 app.use(express.urlencoded({ extended: false }));
+app.use(flash());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.get('/', (req, res) => {
   res.render('index.ejs', { name: 'Ashok Kumar' });
